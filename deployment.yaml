@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-shop
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flask-shop
+  template:
+    metadata:
+      labels:
+        app: flask-shop
+    spec:
+      containers:
+      - name: flask-shop
+        image: flask-shop:latest
+        ports:
+        - containerPort: 5000
