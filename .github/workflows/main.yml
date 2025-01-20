@@ -29,10 +29,7 @@ jobs:
     - name: Build Docker image
       run: |
         docker build -t flask-shop:latest .
-    
-    - name: log in to Docker Hub 
-      run: echo "${{ secrete.DOCKER_PASSWORD }}" | docker login -u "${{ secrete.DOCKER_USERNAME }}" --password-stdin
-    
+  
     - name: Push to Docker Hub
       env:
         docker_username: ${{ secrets.DOCKER_USERNAME }}
