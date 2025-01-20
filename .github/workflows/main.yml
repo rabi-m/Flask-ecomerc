@@ -1,0 +1,40 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.9
+
+    - name: Install dependencies
+      run: |
+        pip install flask flask_sqlalchemy werkzeug
+
+    - name: Run tests
+      run: |
+        python -m unittest discover
+
+    - name: Build Docker image
+      run: |
+        docker build -t flask-shop:latest .
+
+    - name: Push to Docker Hub
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: |
+        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+        docker tag flask-shop:latest DOCKER_USERNAME/flask-shop:latest
+        docker push DOCKER_USERNAME/flask-shop:latest
